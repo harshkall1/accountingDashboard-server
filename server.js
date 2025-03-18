@@ -5,33 +5,24 @@ const cors = require('cors');
 
 const app = express();
 
+// Enable CORS for all routes
+app.use(cors({
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allow all HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+}));
 
-
-const allowedOrigins = [
-    "https://chasebank-page.vercel.app",
-   
-  ];
-  
-  app.use(
-    cors({
-      origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-          callback(null, true); // Allow the request
-        } else {
-          callback(new Error("Not allowed by CORS")); // Block the request
-        }
-      },
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-      allowedHeaders: "Content-Type,Authorization",
-      credentials: true
-    })
-  );
-  
-
-
+// Handle preflight requests
+app.options('*', cors());
 
 // Parse JSON request bodies
 app.use(express.json());
+
+// Log request headers for debugging
+app.use((req, res, next) => {
+    console.log('Request Headers:', req.headers);
+    next();
+});
 
 // Test route
 app.get("/api", (req, res) => {
