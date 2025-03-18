@@ -5,13 +5,30 @@ const cors = require('cors');
 
 const app = express();
 
-// Enable CORS for all routes and origins
-app.use(cors({
-    origin: '*', // Allow all origins
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allow all HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
-    credentials: true, // Allow credentials (e.g., cookies)
-}));
+
+
+const allowedOrigins = [
+    "https://chasebank-page.vercel.app",
+   
+  ];
+  
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true); // Allow the request
+        } else {
+          callback(new Error("Not allowed by CORS")); // Block the request
+        }
+      },
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: "Content-Type,Authorization",
+      credentials: true
+    })
+  );
+  
+
+
 
 // Parse JSON request bodies
 app.use(express.json());
