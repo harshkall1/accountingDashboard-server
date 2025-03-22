@@ -52,12 +52,11 @@ exports.getTransections = async (req, res) => {
         });
     }
 };
-
-// Update a transaction
+// Update a transaction's status
 exports.updateTransection = async (req, res) => {
     try {
         const { id } = req.params;
-        const { amount, userId } = req.body;
+        const { status } = req.body; // Only accept the status field
 
         if (!id) {
             return res.status(400).json({ 
@@ -65,12 +64,20 @@ exports.updateTransection = async (req, res) => {
             });
         }
 
+        // Validate the status field (optional)
+        if (typeof status !== "boolean") {
+            return res.status(400).json({ 
+                message: 'Status must be a boolean value (true or false)' 
+            });
+        }
+
+        // Update only the status field
         const updatedTransection = await Transection.findByIdAndUpdate(
             id,
-            { amount, userId },
+            { status }, // Only update the status field
             { 
-                new: true,
-                runValidators: true 
+                new: true, // Return the updated document
+                runValidators: true // Run schema validators
             }
         );
 
@@ -89,7 +96,6 @@ exports.updateTransection = async (req, res) => {
         });
     }
 };
-
 // Delete a transaction
 exports.deleteTransection = async (req, res) => {
     try {

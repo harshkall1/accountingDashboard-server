@@ -48,7 +48,7 @@ exports.getUserById = async (req, res) => {
 // Update a user by ID
 exports.updateUserById = async (req, res) => {
     try {
-        const { username, email, bankname } = req.body;
+        const { username, email } = req.body;
 
         // Check if new email or username is already in use by another user
         const existingUser = await User.findOne({ $or: [{ email }, { username }], _id: { $ne: req.params.id } });
@@ -100,3 +100,5 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ message: 'Something went wrong. Please try again later.' });
     }
 };
+
+
