@@ -7,7 +7,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: '*', // Allow all origins
+    origin: 'http://localhost:5173', // Allow only requests from http://localhost:5173
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allow all HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
 }));
@@ -31,6 +31,7 @@ app.get("/api", (req, res) => {
 
 // User routes
 app.use('/user', require('./routers/userRouter'));
+app.use('/transection', require('./routers/transectionRouter'));
 
 // Start the server
 const PORT = process.env.PORT || 3000;

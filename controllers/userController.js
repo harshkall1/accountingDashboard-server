@@ -4,17 +4,18 @@ const jwt = require('jsonwebtoken');
 // Create a new user
 exports.createUser = async (req, res) => {
     try {
-        const { username, email, phoneNo, password, amount } = req.body;
-        
+        const { username, email, phoneNo, password, amount, bankname } = req.body;
+
         // Check if email or username already exists
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
             return res.status(400).json({ message: 'Username or Email already taken' });
         }
 
-        const user = new User({ username, email, phoneNo, password, amount });
+        const user = new User({ username, email, phoneNo, password, amount, bankname });
         await user.save();
         res.status(201).json(user);
+
     } catch (error) {
         console.log(error);
         res.status(400).json({ message: error.message });
@@ -47,7 +48,7 @@ exports.getUserById = async (req, res) => {
 // Update a user by ID
 exports.updateUserById = async (req, res) => {
     try {
-        const { username, email } = req.body;
+        const { username, email, bankname } = req.body;
 
         // Check if new email or username is already in use by another user
         const existingUser = await User.findOne({ $or: [{ email }, { username }], _id: { $ne: req.params.id } });
@@ -77,6 +78,8 @@ exports.deleteUserById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// Login a user
 exports.loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
